@@ -12,6 +12,7 @@ import os
 import json
 import argparse
 
+DEBUG = True
 
 def main(args):
     datasets = ['00.00', '00.01', '01.00', '01.01', '02.00', '02.01', '03.00', '04.00', '04.01']
@@ -19,21 +20,26 @@ def main(args):
     submission = []
 
     for dataset in datasets:
-    ds = dataset + '.test'
-    path = os.path.join(base + ds, 'images')
-    data = td.images.fromtif(path, stop=None, ext='tiff')
-    
-    algorithm = NMF(k=5, percentile=99, max_iter=50, overlap=0.1)
-    model = algorithm.fit(data, chunk_size=(50,50), padding=(25,25))
-    merged = model.merge(0.1)
-    
-    regions = [{'coordinates': region.coordinates.tolist()} for region in merged.regions]
-    result = {'dataset': ds, 'regions': regions}
-    submission.append(result)
-    print('%s has been finished' % ds)
+        ds = dataset + '.test'
+        path = os.path.join(base + ds, 'images')
+        if DEBUG:
+            data = td.images.fromtif(path, stop=50, ext='tiff')
+        else:
+            data = td.images.fromtif(path, stop=None, ext='tiff')
+        
+        data.gaussian_filter()
+
+        algorithm = NMF(k=5, percentile=99, max_iter=50, overlap=0.1)
+        model = algorithm.fit(data, chunk_size=(50,50), padding=(25,25))
+        merged = model.merge(0.1)
+        
+        regions = [{'coordinates': region.coordinates.tolist()} for region in merged.regions]
+        result = {'dataset': ds, 'regions': regions}
+        submission.append(result)
+        print('%s has been finished' % ds)
 
     with open('submission.json', 'w') as f:
-    f.write(json.dumps(submission))
+        f.write(json.dumps(submission))
     
 
 if __name__ == '__main__':
