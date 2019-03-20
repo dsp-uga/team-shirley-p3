@@ -27,10 +27,11 @@ def main(args):
         else:
             data = td.images.fromtif(path, stop=None, ext='tiff')
         
-        data.gaussian_filter()
+        dataMF = data.median_filter(size=2)
+        dataGF = dataMF.gaussian_filter(sigma=1)
 
         algorithm = NMF(k=5, percentile=99, max_iter=50, overlap=0.1)
-        model = algorithm.fit(data, chunk_size=(50,50), padding=(25,25))
+        model = algorithm.fit(dataGF, chunk_size=(50,50), padding=(25,25))
         merged = model.merge(0.1)
         
         regions = [{'coordinates': region.coordinates.tolist()} for region in merged.regions]
@@ -44,8 +45,5 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Neuron Finding')
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument('-tr', '--train', action='store_true', help='Whether or not to train (hyper-parameter tuning)')
-
     args = parser.parse_args()
     main(args)
