@@ -1,0 +1,22 @@
+{
+  "baseDirectory": "/Users/jerryhui/Downloads/project3_neurofinder.all.test",
+  "prefix": "neurofinder.",
+  "datasets": ["00.00"],
+
+  "medianFilterSize": 2,
+  "gaussianFilterSigma": 1,
+
+  "nmfNumComp": 5,
+  "nmfMaxIter": 20,
+  "nmfMaxSize": "full",
+  "nmfMinSize": 20,
+  "nmfPercent": 95,
+  "nmfOverlap": 0.1,
+
+  "nmfFitChunkSize": 50,
+  "nmfFitPadding": 25,
+
+  "nmfMergeOverlap": 0.5,
+  "nmfMergeMaxIter": 2,
+  "nmfMergeKNN": 10
+}
