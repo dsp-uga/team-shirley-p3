@@ -17,7 +17,7 @@ import json
 import parameters 
 from preprocess import preprocess
 
-DEBUG = False    
+DEBUG = True    
 
 def getTestResults(para):
     """
@@ -68,23 +68,22 @@ def getTestResults(para):
                         percentile=para.nmfPercent, 
                         overlap=para.nmfOverlap)
 
-        for chunkSize in range(30, 71, 10):
-            model = algorithm.fit(data2, 
-                                  chunk_size=(chunkSize, para.nmfFitChunkSize), 
-                                  padding=(para.nmfFitPadding, para.nmfFitPadding))
+        model = algorithm.fit(data2, 
+                              chunk_size=(para.nmfFitChunkSize, para.nmfFitChunkSize), 
+                              padding=(para.nmfFitPadding, para.nmfFitPadding))
 
-            merged = model.merge(overlap=para.nmfMergeOverlap,
-                                 max_iter=para.nmfMergeMaxIter,
-                                 k_nearest=para.nmfMergeKNN)
-            
-            # generate resultant regions
-            regions = [{'coordinates': region.coordinates.tolist()} for region in merged.regions]
-            result = {'dataset': dataset, 'regions': regions}
-            submission = [result]
-            print('%s, %s chunk size, has been finished' % (dataset, chunkSize))
+        merged = model.merge(overlap=para.nmfMergeOverlap,
+                             max_iter=para.nmfMergeMaxIter,
+                             k_nearest=para.nmfMergeKNN)
+        
+        # generate resultant regions
+        regions = [{'coordinates': region.coordinates.tolist()} for region in merged.regions]
+        result = {'dataset': dataset, 'regions': regions}
+        submission = [result]
+        print('%s, %s chunk size, has been finished' % (dataset, para.nmfFitChunkSize))
 
-            with open('submission_' + dataset + '_chunk_' + str(chunkSize) + '.json', 'w') as f:
-                f.write(json.dumps(submission))
+        with open('submission_' + dataset + '_chunk_' + str(para.nmfFitChunkSize) + '.json', 'w') as f:
+            f.write(json.dumps(submission))
 
 
 if __name__ == '__main__':

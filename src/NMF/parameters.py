@@ -1,13 +1,9 @@
 class Parameters:
     def __init__(self):
-        self.baseDirectory = '/home/jerry/project3_neurofinder.all.test'
+        self.baseDirectory = '/Users/jerryhui/Downloads/project3_neurofinder.all.test'
         self.prefix = 'neurofinder.'
         self.datasets = [   
-                        '03.00',  
-                        '04.01',
-                        '00.01',  
-                        '01.01',   
-                        '04.00'
+                        '00.00'
                         ]
 
         # self.datasets = [
