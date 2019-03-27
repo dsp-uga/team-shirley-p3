@@ -1,4 +1,5 @@
 import json
+from glob import glob 
 
 def main(files):
     """
@@ -9,14 +10,13 @@ def main(files):
     """
     submission = []
     for file in files:
-        with open(f, 'r') as f:
+        print(file.split('/')[-1])
+        with open(file, 'r') as f:
             submission += json.load(f)
     
     with open('submission.json', 'w') as f:
         f.write(json.dumps(submission))
 
 if __name__ == '__main__':
-    files = [
-
-    ]
+    files = glob('/Users/jerryhui/Desktop/Files/UGA/CS/8360DataPracticum/Projects/p3/submissions/submission*')
     main(files)
