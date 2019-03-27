@@ -151,7 +151,8 @@ def unet(input_height, input_width, n_classes):
     output = (Activation('softmax'))(conv9)
     return Model(inputs, output)
 
-def load_testing():
+def load_training():
+	x_temp = []
 	x_train = []
 	y_train = []
 	base_frames = '../data/avg_frames/'
@@ -168,10 +169,13 @@ def load_testing():
 		for i in range(n_classes):
 			mask[:, :, i] = (y_img == i).astype(int)
 		y_train.append(mask)
+	x_train = np.array(x_train)
+	y_train = np.array(y_train)
 	return x_train, y_train
 
-x_train, y_train = load_testing()
-model = unet(512, 512, 2)
+x_train, y_train = load_training()
+#model = unet(512, 512, 2)
+model = fcn8(512, 512, 2)
 model.summary()
 sgd = optimizers.SGD(lr=0.01, decay=5**(-4), momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=sgd, \
@@ -179,5 +183,5 @@ model.compile(loss='categorical_crossentropy', optimizer=sgd, \
 model_path = '../models/Current_Best.h5'
 callbacks=[ModelCheckpoint(filepath=model_path, \
 		monitor='val_loss', save_best_only=True)]
-model.fit(x_train, y_train, batch_size=8, epochs=200, validation_split=0.1, callbacks=callbacks)
+model.fit(x_train, y_train, batch_size=1, epochs=20, validation_split=0.1, callbacks=callbacks)
 model.save('../models/Full.h5')
