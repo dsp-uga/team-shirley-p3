@@ -21,9 +21,10 @@ def preprocess(input, para):
     # gaussian filter
     dataGF = dataMF.gaussian_filter(sigma=para.gaussianFilterSigma)
 
+    # We can assume the neurons are motionless
     # registration
-    algorithmReg = CrossCorr()
-    modelReg = algorithmReg.fit(dataGF, reference=dataGF.mean().toarray())
-    registered = modelReg.transform(dataGF)
+    # algorithmReg = CrossCorr()
+    # modelReg = algorithmReg.fit(dataGF, reference=dataGF.mean().toarray())
+    # registered = modelReg.transform(dataGF)
     
     return dataGF
