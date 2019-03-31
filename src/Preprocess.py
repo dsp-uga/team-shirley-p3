@@ -22,10 +22,8 @@ def avg_frames():
 		output = np.zeros((height, width))	
 		for frame in frames:
 			temp_frame = cv2.imread(base + dir_name + '/images/' + frame)
-			for i in range(height):
-				for j in range(width):
-					output[i][j] += temp_frame[i][j][0] / len(frames)
-		np.save('../data/avg_frames/' + dir_name +  '.npy', output)
+			output += temp_frame[:,:,0] / len(frames)
+		np.save('../data/full/avg_frames/' + dir_name +  '.npy', output)
 
 def create_masks():
 	base = '../../data/'
@@ -36,8 +34,41 @@ def create_masks():
 		for region in regions:
 			for pair in region['coordinates']:
 				mask[pair[0]][pair[1]] = 1
-		np.save('../data/masks/' + dir_name + '.npy', mask)
+		np.save('../data/full/masks/' + dir_name + '.npy', mask)
+
+
+		
+def crop_avg_frames():
+	base = '../data/full/avg_frames/'
+	samples = os.listdir(base)
+	for sample in samples:
+		crop_counter = 0
+		frame = np.load(base + sample)
+		for i in range(1, 9):
+			for j in range(1, 9):
+				current = frame[64 * (i - 1): 64 * i, 64 * (j - 1): 64 * j]
+				np.save('../data/cropped/avg_frames/' + \
+					sample[: len(sample) - 4] + '-' + \
+					str(crop_counter) + '.npy', \
+					current)
+				crop_counter += 1
+def crop_avg_masks():
+	base = '../data/full/masks/'
+	samples = os.listdir(base)
+	for sample in samples:
+		crop_counter = 0
+		mask = np.load(base + sample)
+		for i in range(1, 9):
+			for j in range(1, 9):
+				current = mask[64 * (i - 1): 64 * i, 64 * (j - 1): 64 * j]
+				np.save('../data/cropped/masks/' + \
+					sample[: len(sample) - 4] + '-' + \
+					str(crop_counter) + '.npy', \
+					current)
+				crop_counter += 1
 
 #unzip_dirs()
 #avg_frames()
-create_masks()
+#create_masks()
+#crop_avg_frames()
+crop_avg_masks()
