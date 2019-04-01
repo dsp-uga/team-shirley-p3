@@ -156,8 +156,8 @@ def load_full_training():
 	x_temp = []
 	x_train = []
 	y_train = []
-	base_frames = '../data/full/avg_frames/'
-	base_masks = '../data/full/masks/'
+	base_frames = '../data/training/full/avg_frames/'
+	base_masks = '../data/training/full/masks/'
 	samples = os.listdir(base_frames)
 	n_classes = 2
 	for sample in samples:	
@@ -178,38 +178,87 @@ def load_cropped_training():
 	x_temp = []
 	x_train = []
 	y_train = []
-	base_frames = '../data/cropped/avg_frames/'
-	base_masks = '../data/cropped/masks/'
+	base_frames = '../data/training/cropped/avg_frames/'
+	base_masks = '../data/training/cropped/masks/'
 	samples = os.listdir(base_frames)
 	n_classes = 2
 	for sample in samples:	
 		x_img = np.load(base_frames + sample).astype(int)
 		sample_instance = np.zeros((x_img.shape[0], x_img.shape[1], 1))
 		sample_instance[:, :, 0] = x_img
-		x_train.append(sample_instance)
 		y_img = np.load(base_masks + sample).astype(int)
 		mask = np.zeros((y_img.shape[0], y_img.shape[1], n_classes))
 		for i in range(n_classes):
 			mask[:, :, i] = (y_img == i).astype(int)
-		y_train.append(mask)
+		if (np.sum(y_img == 1) / (y_img.shape[0] * y_img.shape[1])) >= 0.4:
+			x_train.append(sample_instance)
+			y_train.append(mask)
 	x_train = np.array(x_train)
 	y_train = np.array(y_train)
 	return x_train, y_train
 
+def load_cropped_testing():
+	x_temp = []
+	x_test = []
+	region_names = []
+	base_frames = '../data/testing/cropped/avg_frames/'
+	samples = os.listdir(base_frames)
+	n_classes = 2
+	for sample in samples:	
+		x_img = np.load(base_frames + sample).astype(int)
+		sample_instance = np.zeros((x_img.shape[0], x_img.shape[1], 1))
+		sample_instance[:, :, 0] = x_img
+		x_test.append(sample_instance)
+		region_names.append(sample[:len(sample) - 4])
+	x_test = np.array(x_test)
+	return x_test, region_names
+
+def testing_sample_names():
+	base = '../data/testing/full/avg_frames/'
+	sample_names = os.listdir(base)
+	for i in range(len(sample_names)):
+		sample_names[i] = sample_names[i][:len(sample_names[i]) - 4]
+	return sample_names
+
+def restitch_images(sample_names, region_names, pred_imgs):
+	regions = {}
+	for i in range(len(region_names)):
+		regions[region_names[i]] = pred_imgs[i]
+	outputs = []
+	for name in sample_names:
+		counter = 0
+		img = np.zeros((512, 512))
+		for i in range(1, 9):
+			for j in range(1, 9):
+				img[64 * (i - 1): 64 * i, 64 * (j - 1): 64 * j] = \
+					regions[name + '-' + counter]
+				counter += 1
+		outputs.append(img)
+	return outputs
+	
 
 #x_train, y_train = load_full_training()
 #model = unet(512, 512, 2)
 #model = fcn8(512, 512, 2)
 
 x_train, y_train = load_cropped_training()
+x_test, region_names = load_cropped_testing()
+sample_names = testing_sample_names()
 #model = unet(64, 64, 2)
 model = fcn8(64, 64, 2)
 model.summary()
-sgd = optimizers.SGD(lr=0.01, decay=5**(-4), momentum=0.9, nesterov=True)
+sgd = optimizers.SGD(lr=0.03, decay=5**(-4), momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=sgd, \
 		metrics=['accuracy'])
 model_path = '../models/Current_Best.h5'
 callbacks=[ModelCheckpoint(filepath=model_path, \
 		monitor='val_loss', save_best_only=True)]
-model.fit(x_train, y_train, batch_size=32, epochs=20, validation_split=0.1, callbacks=callbacks)
+model.fit(x_train, y_train, batch_size=1, epochs=10000, validation_split=0.1, callbacks=callbacks)
 model.save('../models/Full.h5')
+
+#Model that trained on the full number of epochs
+pred = model.predict(x_test)
+pred_imgs = np.argmax(pred, axis=3)
+outputs = restitch_images(sample_names, region_names, pred_imgs)
+for i in range(len(outputs)):
+	np.save('../outputs/full_outputs/' + sample_names[i] + '.npy', outputs[i])
