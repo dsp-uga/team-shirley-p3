@@ -231,7 +231,7 @@ def restitch_images(sample_names, region_names, pred_imgs):
 		for i in range(1, 9):
 			for j in range(1, 9):
 				img[64 * (i - 1): 64 * i, 64 * (j - 1): 64 * j] = \
-					regions[name + '-' + counter]
+					regions[name + '-' + str(counter)]
 				counter += 1
 		outputs.append(img)
 	return outputs
@@ -262,3 +262,11 @@ pred_imgs = np.argmax(pred, axis=3)
 outputs = restitch_images(sample_names, region_names, pred_imgs)
 for i in range(len(outputs)):
 	np.save('../outputs/full_outputs/' + sample_names[i] + '.npy', outputs[i])
+
+#Model that had the best val_loss 
+model = keras.models.load_model('../models/Current_Best.h5')
+pred = model.predict(x_test)
+pred_imgs = np.argmax(pred, axis=3)
+outputs = restitch_images(sample_names, region_names, pred_imgs)
+for i in range(len(outputs)):
+	np.save('../outputs/best_outputs/' + sample_names[i] + '.npy', outputs[i])
