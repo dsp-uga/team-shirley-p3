@@ -77,3 +77,6 @@ We are tuning the NMF algorithm by varying the chunksize. Our best score for the
 * https://github.com/codeneuro/neurofinder
 * https://gist.github.com/freeman-lab/330183fdb0ea7f4103deddc9fae18113
 * https://gist.github.com/freeman-lab/3e98ea4ccb96653c8fb085090079ce21
+
+## License
+This project is licensed under the [MIT License](https://github.com/dsp-uga/team-shirley-p3/blob/jiahao_develop/LICENSE)
