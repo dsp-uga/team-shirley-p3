@@ -103,7 +103,12 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+<<<<<<< HEAD
 src/NMF/resultsSummary.txt
 src/NMF/*json
 src/.DS_Store
 src/NMF/.DS_Store
+=======
+# Just Mac things
+.DS_Store
+>>>>>>> master
