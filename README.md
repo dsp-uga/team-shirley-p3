@@ -14,14 +14,18 @@
 
 ## Data
 
+We can download all the data through the script
+```
+$ src/getData.sh
+``` 
+
+#### Data exploration
 Following are some visualization for 00.00 dataseet 
 
 Rescaled average image            |  Label
 :-------------------------:|:-------------------------:
 ![](https://github.com/dsp-uga/team-shirley-p3/blob/jiahao_develop/visualization/raw0000.png)  |  ![](https://github.com/dsp-uga/team-shirley-p3/blob/jiahao_develop/visualization/label0000.png)
 
-
-## Data exploration
 The following animation is a visualization of the data for the ```00.00``` dataset
 
 ![](https://github.com/dsp-uga/team-shirley-p3/blob/jiahao_develop/visualization/video.gif)
