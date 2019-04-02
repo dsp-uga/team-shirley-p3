@@ -24,7 +24,7 @@ Rescaled average image            |  Label
 ## Data exploration
 The following animation is a visualization of the data for the ```00.00``` dataset
 
-![](https://github.com/dsp-uga/team-shirley-p3/blob/jiahao_develop/visualization/video.gif =256x256)
+![](https://github.com/dsp-uga/team-shirley-p3/blob/jiahao_develop/visualization/video.gif)
 
 ## Preprocessing
 Before feeding the data to the model, we implemented the median fileter and gaussian filter to the data, which could help remove some noise.
