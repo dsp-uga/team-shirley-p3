@@ -1,6 +1,6 @@
 # CSCI-8360 Project 3: Neuron Finding
 ## Team-shirley
-### Members (Ordered by last bane alphabetically)
+### Members 
 * Marcus Hill (marcdh@uga.edu)
 * Narinder Singh (narindersingh.ghumman@uga.edu)
 * Jiahao Xu (jiahaoxu@uga.edu)
@@ -11,10 +11,12 @@
 * [thunder-extraction](https://github.com/thunder-project/thunder-extraction)
 
 ## Problem overview
+The problem here is one of finding neurons in a large time series calcium fluorescence dataset. The problem is fundamentally one of image segmentation. While imaging, as calcium is added, action potential gates are activated, illuminating parts of the image that contain nerurons. This forms the basis for building algorithms or training models for segmentation. A slightly more detailed problem overview can be found [here](https://github.com/dsp-uga/sp19/blob/master/projects/p3/project3.pdf).
 
 ## Data
+The dataset is time-series obtained through calcium imaging. It can be found [here](gs://uga-dsp/project3). Each folder contains an imaging sample as a series of sequentially numbered image files in TIFF format. There are 28 folders in total: 19 training samples and 9 testing samples. The training labels spicfy the areas in the imaging that contain neurons. 19 training samples mean that there are 19 labels - each label specifying a set of regions in the 2-D plane - essentially drawing 'circles' around the neurons.
 
-We can download all the data through the script
+The complete dataset can be downloaded by running the following script:
 ```
 $ src/getData.sh
 ``` 
