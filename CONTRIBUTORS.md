@@ -6,7 +6,7 @@
 - Documentation
 
 #### Narinder Singh (narindersingh.ghumman@uga.edu)
-- ETHICS clarifications
+- ETHICS research and writing
 - Documentation
 
 #### Jiahao Xu (jiahaoxu@uga.edu)
