@@ -6,9 +6,9 @@
 * Jiahao Xu (jiahaoxu@uga.edu)
 
 ## Technology packages
-* keras (https://keras.io/)
-* thunder-python (https://github.com/thunder-project/thunder)
-* thunder-extraction (https://github.com/thunder-project/thunder-extraction)
+* [keras](https://keras.io/)
+* [thunder-python](https://github.com/thunder-project/thunder)
+* [thunder-extraction](https://github.com/thunder-project/thunder-extraction)
 
 ## Problem overview
 
