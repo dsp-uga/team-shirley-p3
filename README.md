@@ -31,7 +31,9 @@ The following animation is a visualization of the data for the ```00.00``` datas
 ![](https://github.com/dsp-uga/team-shirley-p3/blob/jiahao_develop/visualization/video.gif)
 
 ## Preprocessing
-Before feeding the data to the model, we implemented the median fileter and gaussian filter to the data, which could help remove some noise.
+Before feeding the data to the NMF model, we implemented the median fileter and gaussian filter to the data, which could help remove some noise. 
+
+For the CNN model, we averaged the pixels from every video frame in a sample to create a single image. These images will serve as the input to the model, so that pixel-wise classification can occur to determine neurons. We crafted masks by reading in the regions json files included with each sample, and for every coordinate we labeled that pixel to be a neuron, and the rest background. However, this resulted in a severe class imbalance. In an effort to compensate for this, we cropped each sample's averaged image and corresponding mask into 64 64x64 regions in the hopes of training our model by region-by-region rather than by inputting the entire image. Additionally, our model was trained using only regions where the neurons were at least 40% of the image.
 
 ## Implementation
 ### NMF
@@ -62,6 +64,15 @@ where all the parameters can be varied in ```src/NMF/parameters.py```
 * **nmfMergeKNN**: the number of k_nearest neighbors to speed up computation.
 
 As for the theory of the NMF, please refer to our wiki page.
+
+### CNN
+The CNN for this project was modeled after FCN8 architecture. In order to run this model, run the python 3 script "CNN.py" located inside the "src/CNN/" subdirectory. The script will save the model that demonstrated the smallest validation loss during testing (referred to as best), and will save the model that has trained for 20 epochs (referred to as full). These models will be saved in a subdirectory titled "models". Additionally, the ouput masks for each sample from both models will be saved in a subdirectories named "full_outputs" and "best_outputs" inside of a directory tititled "outputs". Thus, empty directories titled "models" and "outputs" should be created prior to running the "CNN.py" script.
+
+The tutorial that provided insight into the inner workings of the model:
+* https://fairyonice.github.io/Learn-about-Fully-Convolutional-Networks-for-semantic-segmentation.html
+
+The direct code from the following github project was utilized. Adjustments were made to support input of dimensions 512x512 and the a later convolution filter in the model is scaled accordingly to dimensionality change.
+*  https://github.com/dsp-uga/team-hasay
 
 ## Metrics 
 Instead of using a simple classification accuracy, this work is tested by the combined score from precision, recall, incluson and exclusion for each of the 9 test sets on AutoLab. (https://github.com/dsp-uga/sp19/blob/master/projects/p3/project3.pdf)
